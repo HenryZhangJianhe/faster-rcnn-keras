@@ -20,14 +20,28 @@ from keras_frcnn import resnet as nn
 import keras_frcnn.roi_helpers as roi_helpers
 from keras_frcnn.pascal_voc_parser import get_data
 from keras.utils import generic_utils
-
+from data_prepare import *
 
 sys.setrecursionlimit(40000)
 
+#在源数据并列拷贝 创建自己的管理目录,Annotations,JPEGImages,ImageSets
+dataset_dir=os.path.join('..','data')
+
+my_training_data_dir=os.path.join('..','my_training_data'); makedir(my_training_data_dir)
+data_name='AnQuanMao'
+Annotations_dir=os.path.join(my_training_data_dir,data_name,'Annotations');makedir(Annotations_dir)
+JPEGImages_dir=os.path.join(my_training_data_dir,data_name,'JPEGImages');makedir(JPEGImages_dir)
+ImageSets_dir=os.path.join(my_training_data_dir,data_name,'ImageSets');makedir(ImageSets_dir)
+train_txt_path= os.path.join(ImageSets_dir,'trainval.txt')
+
+gen_txt(train_txt_path,dataset_dir,'*.jpg')
+#复制数据\和标注
+copy(JPEGImages_dir,dataset_dir,'*.jpg')
+copy(Annotations_dir,dataset_dir,'*.xml')
 
 # training parameters from command line
 parser = OptionParser()
-parser.add_option("-p", "--path", dest="train_path", help="Path to training data.", default="data/")
+parser.add_option("-p", "--path", dest="train_path", help="Path to training data.", default=my_training_data_dir)
 parser.add_option("-n", "--num_rois", dest="num_rois", help="Number of ROIs per iteration. Higher means more memory use.", default=32)
 parser.add_option("--hf", dest="horizontal_flips", help="Augment with horizontal flips in training. (Default=true).", action="store_true", default=False)
 parser.add_option("--vf", dest="vertical_flips", help="Augment with vertical flips in training. (Default=false).", action="store_true", default=False)

@@ -9,9 +9,9 @@ def get_data(input_path):
 
     class_mapping = {}
 
-    visualise = False
+    visualise = True
 
-    data_paths = [os.path.join(input_path,s) for s in ['person2020']]
+    data_paths = [os.path.join(input_path,s) for s in ['AnQuanMao']]
 
     print('Parsing annotation files')
 
@@ -19,8 +19,7 @@ def get_data(input_path):
 
         annot_path = os.path.join(data_path, 'Annotations')
         imgs_path = os.path.join(data_path, 'JPEGImages')
-        imgsets_path_trainval = os.path.join(data_path, 'ImageSets/Main/trainval.txt')
-        imgsets_path_test = os.path.join(data_path, 'ImageSets/Main/test.txt')
+        imgsets_path_trainval = os.path.join(data_path, 'ImageSets/trainval.txt')
 
         trainval_files = []
         test_files = []
@@ -30,17 +29,6 @@ def get_data(input_path):
                     trainval_files.append(line.strip() + '.jpg')
         except Exception as e:
             print(e)
-
-        try:
-            with open(imgsets_path_test) as f:
-                for line in f:
-                    test_files.append(line.strip() + '.jpg')
-        except Exception as e:
-            if data_path[-7:] == 'VOC2012':
-                # this is expected, most pascal voc distibutions dont have the test.txt file
-                pass
-            else:
-                print(e)
         
         annots = [os.path.join(annot_path, s) for s in os.listdir(annot_path)]
         idx = 0
